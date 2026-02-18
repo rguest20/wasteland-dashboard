@@ -1,0 +1,80 @@
+services:
+  npc-store-runtime:
+    build:
+      context: ./
+      dockerfile: ./docker/runtime/Dockerfile
+    environment:
+      COMPOSER_MEMORY_LIMIT: 2G
+      XDEBUG_CONFIG: "client_host=${XDEBUG_CONF_HOST} client_port=${XDEBUG_CONF_PORT} idekey=${XDEBUG_CONF_IDEKEY}"
+      PHP_IDE_CONFIG: serverName=${XDEBUG_IDE_SETTINGS_PHP_SERVERS_NAME}
+      DATABASE_URL: "mysql://laravel:secret@npc-store-database:3306/app?serverVersion=8.0"
+    expose:
+      - 9000
+    networks: [backend]
+    volumes:
+      - ./:/var/www:cached
+      - ./docker/application/config/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+    depends_on:
+      - npc-store-database
+
+  npc-store-web-nginx:
+    depends_on: [npc-store-runtime]
+    build: ./docker/nginx
+    networks: [backend, frontend]
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www:cached
+
+  npc-store-database:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    networks: [backend]
+    ports:
+      - "33064:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: secret
+      MYSQL_DATABASE: app
+
+  npc-store-node-js:
+    image: node:18-alpine
+    command: tail -f /dev/null
+    working_dir: /build
+    volumes:
+      - ./:/build
+      - node-modules:/build/node_modules
+
+###> doctrine/doctrine-bundle ###
+  database:
+    image: postgres:${POSTGRES_VERSION:-16}-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-app}
+      # You should definitely change the password in production
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
+      POSTGRES_USER: ${POSTGRES_USER:-app}
+    healthcheck:
+      test: ["CMD", "pg_isready", "-d", "${POSTGRES_DB:-app}", "-U", "${POSTGRES_USER:-app}"]
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    volumes:
+      - database_data:/var/lib/postgresql/data:rw
+      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
+      # - ./docker/db/data:/var/lib/postgresql/data:rw
+###< doctrine/doctrine-bundle ###
+
+volumes:
+  mysql-data:
+
+###> doctrine/doctrine-bundle ###
+  database_data:
+###< doctrine/doctrine-bundle ###
+  node-modules:
+
+networks:
+  frontend:
+  backend:
