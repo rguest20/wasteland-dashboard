@@ -4,7 +4,7 @@ namespace App\Dto;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[\AllowDynamicProperties]
+#[AllowDynamicProperties]
 final class CreateNpcRequest
 {
     const REQUIRED_FIELDS = ['name', 'notes', 'role_name'];

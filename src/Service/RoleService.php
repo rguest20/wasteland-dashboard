@@ -5,7 +5,7 @@ namespace App\Service;
 use App\Entity\Role;
 use App\Repository\RoleRepository;
 
-final class RoleService
+class RoleService
 {
     public function __construct(
         private readonly RoleRepository $roleRepository,

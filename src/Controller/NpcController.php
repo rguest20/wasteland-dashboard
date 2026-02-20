@@ -11,10 +11,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/api')]
+#[Route('/api/npcs')]
 class NpcController extends AbstractController
 {
-    #[Route('/npcs', name: 'npc_list', methods: ['GET'])]
+    #[Route('', name: 'npc_list', methods: ['GET'])]
     public function list(NpcService $npcService): JsonResponse
     {
         $npcs = $npcService->getAllNpcs();
@@ -29,19 +29,13 @@ class NpcController extends AbstractController
             ];
         }, $npcs);
 
-        return $this->json($result);
+        return new JsonResponse($result);
     }
 
-    #[Route('/npc/{id}', name: 'npc_get', methods: ['GET'])]
-    public function get(NpcService $npcService, int $id): JsonResponse
+    #[Route('/{id}', name: 'npc_get', methods: ['GET'])]
+    public function get(Npc $npc, NpcService $npcService): JsonResponse
     {
-        $npc = $npcService->getNpcById($id);
-
-        if (!$npc) {
-            return new JsonResponse(['error' => 'NPC not found'], JsonResponse::HTTP_NOT_FOUND);
-        }
-
-        return $this->json([
+        return new JsonResponse([
             'id' => $npc->getId(),
             'name' => $npc->getName(),
             'notes' => $npc->getNotes(),
@@ -51,7 +45,7 @@ class NpcController extends AbstractController
         ]);
     }
 
-    #[Route('/npcs', name: 'npc_create', methods: ['POST'])]
+    #[Route('', name: 'npc_create', methods: ['POST'])]
     public function create(
         Request $request,
         NpcService $npcService,
@@ -94,8 +88,8 @@ class NpcController extends AbstractController
         ], JsonResponse::HTTP_CREATED);
     }
 
-    #[Route('/npc/{id}', name: 'npc_update', methods: ['PUT'])]
-    public function update(int $id, Request $request, NpcService $npcService, RoleService $roleService): JsonResponse
+    #[Route('/{id}', name: 'npc_update', methods: ['PUT'])]
+    public function update(Npc $npc, Request $request, NpcService $npcService, RoleService $roleService): JsonResponse
     {
         $payload = json_decode($request->getContent(), true);
 
@@ -107,11 +101,6 @@ class NpcController extends AbstractController
             return new JsonResponse(['error' => 'Missing notes field'], JsonResponse::HTTP_BAD_REQUEST);
         }
 
-        $npc = $npcService->getNpcById($id);
-        if (!$npc) {
-            return new JsonResponse(['error' => 'NPC not found'], JsonResponse::HTTP_NOT_FOUND);
-        }
-        
         $newRole = $roleService->getRoleByName($payload['role_name'] ?? $npc->getRole()?->getName());
 
         $npc->setName($payload['name'] ?? $npc->getName());
@@ -130,7 +119,7 @@ class NpcController extends AbstractController
         ]);
     }
 
-    #[Route('/npc/{id}', name: 'npc_delete', methods: ['DELETE'])]
+    #[Route('/{id}', name: 'npc_delete', methods: ['DELETE'])]
     public function delete(int $id, NpcService $npcService): JsonResponse
     {
         $npc = $npcService->getNpcById($id);
@@ -144,5 +133,4 @@ class NpcController extends AbstractController
             'message' => 'NPC deleted successfully',
         ]);
     }
-
 }

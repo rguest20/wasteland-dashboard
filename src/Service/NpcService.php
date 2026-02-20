@@ -7,7 +7,8 @@ use App\Entity\Npc;
 use App\Entity\Role;
 use App\Repository\NpcRepository;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-final class NpcService
+
+class NpcService
 {
     public function __construct(
         private readonly NpcRepository $npcRepository,
