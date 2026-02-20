@@ -29,6 +29,9 @@ class Npc
     #[ORM\ManyToOne(inversedBy: 'npcs')]
     private ?Role $role = null;
 
+    #[ORM\ManyToOne(inversedBy: 'npcs')]
+    private ?Location $location = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -97,6 +100,18 @@ class Npc
     public function setRole(?Role $role): static
     {
         $this->role = $role;
+
+        return $this;
+    }
+
+    public function getLocation(): ?Location
+    {
+        return $this->location;
+    }
+
+    public function setLocation(?Location $location): static
+    {
+        $this->location = $location;
 
         return $this;
     }

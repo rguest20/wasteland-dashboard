@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Dto\CreateNpcRequest;
 use App\Entity\Npc;
+use App\Service\LocationService;
 use App\Service\NpcService;
 use App\Service\RoleService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,6 +26,7 @@ class NpcController extends AbstractController
                 'name' => $npc->getName(),
                 'notes' => $npc->getNotes(),
                 'role' => $npc->getRole()?->getName(),
+                'location' => $npc->getLocation()?->getName(),
                 'created_at' => $npc->getCreatedAt()?->format(DATE_ATOM),
             ];
         }, $npcs);
@@ -33,13 +35,14 @@ class NpcController extends AbstractController
     }
 
     #[Route('/{id}', name: 'npc_get', methods: ['GET'])]
-    public function get(Npc $npc, NpcService $npcService): JsonResponse
+    public function get(Npc $npc): JsonResponse
     {
         return new JsonResponse([
             'id' => $npc->getId(),
             'name' => $npc->getName(),
             'notes' => $npc->getNotes(),
             'role' => $npc->getRole()?->getName(),
+            'location' => $npc->getLocation()?->getName(),
             'created_at' => $npc->getCreatedAt()?->format(DATE_ATOM),
             'updated_at' => $npc->getUpdatedAt()?->format(DATE_ATOM),
         ]);
@@ -69,10 +72,10 @@ class NpcController extends AbstractController
         }
 
         $role = $roleService->getRoleByName($dto->role_name ?? '');
-            if (!$role) {
-                return new JsonResponse(
-                    ['errors' => ['role_name' => ['Unknown role_name']]],
-                    JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+        if (!$role) {
+            return new JsonResponse(
+                ['errors' => ['role_name' => ['Unknown role_name']]],
+                JsonResponse::HTTP_UNPROCESSABLE_ENTITY
             );
         }
 
@@ -83,6 +86,7 @@ class NpcController extends AbstractController
             'name' => $npc->getName(),
             'notes' => $npc->getNotes(),
             'role' => $npc->getRole()?->getName(),
+            'location' => $npc->getLocation()?->getName(),
             'created_at' => $npc->getCreatedAt()->format(DATE_ATOM),
             'updated_at' => $npc->getUpdatedAt()->format(DATE_ATOM),
         ], JsonResponse::HTTP_CREATED);
@@ -101,7 +105,17 @@ class NpcController extends AbstractController
             return new JsonResponse(['error' => 'Missing notes field'], JsonResponse::HTTP_BAD_REQUEST);
         }
 
-        $newRole = $roleService->getRoleByName($payload['role_name'] ?? $npc->getRole()?->getName());
+        $newRole = $npc->getRole();
+        if (array_key_exists('role_name', $payload)) {
+            $roleName = is_string($payload['role_name']) ? trim($payload['role_name']) : '';
+            $newRole = $roleService->getRoleByName($roleName);
+            if (!$newRole) {
+                return new JsonResponse(
+                    ['errors' => ['role_name' => ['Unknown role_name']]],
+                    JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+                );
+            }
+        }
 
         $npc->setName($payload['name'] ?? $npc->getName());
         $npc->setNotes($payload['notes']);
@@ -114,8 +128,49 @@ class NpcController extends AbstractController
             'name' => $npc->getName(),
             'notes' => $npc->getNotes(),
             'role' => $npc->getRole()?->getName(),
+            'location' => $npc->getLocation()?->getName(),
             'created_at' => $npc->getCreatedAt()->format(DATE_ATOM),
             'updated_at' => $npc->getUpdatedAt()->format(DATE_ATOM),
+        ]);
+    }
+
+    #[Route('/{id}/location', name: 'npc_move', methods: ['PUT'])]
+    public function move(
+        Npc $npc,
+        Request $request,
+        NpcService $npcService,
+        LocationService $locationService
+    ): JsonResponse {
+        $payload = json_decode($request->getContent(), true);
+        if (!is_array($payload)) {
+            return new JsonResponse(['error' => 'Invalid JSON'], JsonResponse::HTTP_BAD_REQUEST);
+        }
+
+        if (!array_key_exists('location_id', $payload)) {
+            return new JsonResponse(['error' => 'Missing location_id field'], JsonResponse::HTTP_BAD_REQUEST);
+        }
+
+        $locationId = $payload['location_id'];
+        if (!is_int($locationId) && !is_null($locationId)) {
+            return new JsonResponse(['error' => 'location_id must be an integer or null'], JsonResponse::HTTP_BAD_REQUEST);
+        }
+
+        $location = null;
+        if (is_int($locationId)) {
+            $location = $locationService->getLocationById($locationId);
+            if (!$location) {
+                return new JsonResponse(['error' => 'Location not found'], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+            }
+        }
+
+        $npc->setLocation($location);
+        $npc->setUpdatedAt(new \DateTimeImmutable('now', new \DateTimeZone('UTC')));
+        $npcService->saveNpc($npc);
+
+        return new JsonResponse([
+            'id' => $npc->getId(),
+            'location' => $npc->getLocation()?->getName(),
+            'updated_at' => $npc->getUpdatedAt()?->format(DATE_ATOM),
         ]);
     }
 

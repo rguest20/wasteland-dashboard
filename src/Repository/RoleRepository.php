@@ -16,6 +16,20 @@ class RoleRepository extends ServiceEntityRepository
         parent::__construct($registry, Role::class);
     }
 
+    public function save(Role $role): void
+    {
+        $em = $this->getEntityManager();
+        $em->persist($role);
+        $em->flush();
+    }
+
+    public function delete(Role $role): void
+    {
+        $em = $this->getEntityManager();
+        $em->remove($role);
+        $em->flush();
+    }
+
     //    /**
     //     * @return Role[] Returns an array of Role objects
     //     */

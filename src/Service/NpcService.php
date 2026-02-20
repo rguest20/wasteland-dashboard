@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Dto\CreateNpcRequest;
+use App\Entity\Location;
 use App\Entity\Npc;
 use App\Entity\Role;
 use App\Repository\NpcRepository;
@@ -65,5 +66,13 @@ class NpcService
         $this->npcRepository->save($npc);
 
         return $npc;
+    }
+
+    /**
+     * @return Npc[]
+     */
+    public function getNpcsByLocation(Location $location): array
+    {
+        return $this->npcRepository->findByLocation($location);
     }
 }
