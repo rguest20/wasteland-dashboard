@@ -67,6 +67,12 @@ body {
   margin: 2px 8px 12px;
 }
 
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .side-btn {
   width: 100%;
   background: transparent;
@@ -75,9 +81,10 @@ body {
   border-radius: 9px;
   text-align: left;
   padding: 10px 12px;
-  margin-bottom: 8px;
+  margin-bottom: 0;
   cursor: pointer;
-  font-family: inherit;
+  font-family: "IBM Plex Mono", "SF Mono", Menlo, Consolas, monospace;
+  font-size: small;
 }
 
 .side-btn.active {
@@ -113,7 +120,7 @@ body {
   font-weight: 700;
   padding: 10px 14px;
   cursor: pointer;
-  font-family: inherit;
+  font-family: "IBM Plex Mono", "SF Mono", Menlo, Consolas, monospace;
   box-shadow: 0 0 0 0 rgba(99, 255, 140, 0.35);
   transition: transform .12s ease, box-shadow .12s ease;
 }
@@ -188,6 +195,62 @@ body {
 
 .status.error { color: var(--danger); }
 
+.form-card {
+  max-width: 820px;
+}
+
+.dashboard-form .form-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.dashboard-form .form-group label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.dashboard-form .form-control {
+  width: 100%;
+  background: #2f2f2f;
+  border: 1px solid #666;
+  color: var(--text);
+  border-radius: 10px;
+  padding: 11px 12px;
+  font: inherit;
+}
+
+.dashboard-form .form-control:focus {
+  outline: none;
+  border-color: var(--pipboy);
+  box-shadow: 0 0 0 2px rgba(99, 255, 140, 0.2);
+}
+
+.dashboard-form .form-group ul {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  color: var(--danger);
+  font-size: 13px;
+}
+
+.form-actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+}
+
+.form-actions .side-btn {
+  width: auto;
+  text-decoration: none;
+  margin: 0;
+}
+
 @media (max-width: 840px) {
   .layout { grid-template-columns: 1fr; }
 
@@ -204,6 +267,17 @@ body {
 
   .side-btn {
     margin: 0;
+    text-align: center;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .form-actions .side-btn,
+  .form-actions .cta {
+    width: 100%;
     text-align: center;
   }
 }

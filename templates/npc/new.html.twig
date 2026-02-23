@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New NPC{% endblock %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  <link rel="stylesheet" href="/css/dashboard.css">
+{% endblock %}
+
+{% block body %}
+  <header class="search-bar">
+    <h1 class="title">Create New NPC</h1>
+  </header>
+
+  <div class="layout">
+    {% include 'components/dashboard_sidebar.html.twig' with { active: 'npc_new' } %}
+
+    <main class="content">
+      {% for message in app.flashes('success') %}
+        <p class="status">{{ message }}</p>
+      {% endfor %}
+
+      <section class="cards">
+        <article class="card form-card">
+          <h3>NPC Profile</h3>
+
+          {{ form_start(form, { attr: { class: 'dashboard-form' } }) }}
+            <div class="form-grid">
+              <div class="form-group">
+                {{ form_label(form.name) }}
+                {{ form_widget(form.name, { attr: { class: 'form-control', placeholder: 'NPC name' } }) }}
+                {{ form_errors(form.name) }}
+              </div>
+
+              <div class="form-group">
+                {{ form_label(form.notes) }}
+                {{ form_widget(form.notes, { attr: { class: 'form-control', rows: 5, placeholder: 'Optional notes' } }) }}
+                {{ form_errors(form.notes) }}
+              </div>
+
+              <div class="form-group">
+                {{ form_label(form.role) }}
+                {{ form_widget(form.role, { attr: { class: 'form-control' } }) }}
+                {{ form_errors(form.role) }}
+              </div>
+
+              <div class="form-group">
+                {{ form_label(form.location) }}
+                {{ form_widget(form.location, { attr: { class: 'form-control' } }) }}
+                {{ form_errors(form.location) }}
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <a href="/" class="side-btn">Cancel</a>
+              <button type="submit" class="cta">Create NPC</button>
+            </div>
+          {{ form_end(form) }}
+        </article>
+      </section>
+    </main>
+  </div>
+{% endblock %}

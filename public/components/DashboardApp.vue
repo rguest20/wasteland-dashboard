@@ -15,7 +15,7 @@
       <main class="content">
         <div class="content-head">
           <h1 class="title">{{ active.title }}</h1>
-          <button class="cta" type="button">{{ active.cta }}</button>
+          <button class="cta" type="button" @click="redirectToCreate">{{ active.cta }}</button>
         </div>
 
         <EntityList :active-key="active.key" :items="filteredItems" />
@@ -37,9 +37,9 @@ export default {
   data() {
     return {
       entities: [
-        { key: 'locations', label: 'Locations', title: 'Wasteland Locations', cta: 'Add Location', endpoint: '/api/locations' },
-        { key: 'NPCs', label: 'NPCs', title: 'Wasteland NPCs', cta: 'Add NPC', endpoint: '/api/npcs' },
-        { key: 'roles', label: 'Roles', title: 'Wasteland Roles', cta: 'Add Role', endpoint: '/api/roles' },
+        { key: 'locations', label: 'Locations', title: 'Wasteland Locations', cta: 'Add Location', ctaEndpoint: '/locations/new', endpoint: '/api/locations' },
+        { key: 'NPCs', label: 'NPCs', title: 'Wasteland NPCs', cta: 'Add NPC', ctaEndpoint: '/npcs/new', endpoint: '/api/npcs' },
+        { key: 'roles', label: 'Roles', title: 'Wasteland Roles', cta: 'Add Role', ctaEndpoint: '/roles/new', endpoint: '/api/roles' },
       ],
       activeKey: 'locations',
       query: '',
@@ -99,6 +99,9 @@ export default {
       } finally {
         this.loading = false;
       }
+    },
+    redirectToCreate() {
+      window.location.href = this.active.ctaEndpoint;
     },
   },
 

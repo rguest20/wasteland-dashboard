@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Location{% endblock %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  <link rel="stylesheet" href="/css/dashboard.css">
+{% endblock %}
+
+{% block body %}
+  <header class="search-bar">
+    <h1 class="title">Create New Location</h1>
+  </header>
+
+  <div class="layout">
+    {% include 'components/dashboard_sidebar.html.twig' with { active: 'location_new' } %}
+
+    <main class="content">
+      {% for message in app.flashes('success') %}
+        <p class="status">{{ message }}</p>
+      {% endfor %}
+
+      <section class="cards">
+        <article class="card form-card">
+          <h3>Location Stats</h3>
+
+          {{ form_start(form, { attr: { class: 'dashboard-form' } }) }}
+            <div class="form-grid">
+              <div class="form-group">
+                {{ form_label(form.name) }}
+                {{ form_widget(form.name, { attr: { class: 'form-control', placeholder: 'Location name' } }) }}
+                {{ form_errors(form.name) }}
+              </div>
+
+              <div class="form-group">
+                {{ form_label(form.defence) }}
+                {{ form_widget(form.defence, { attr: { class: 'form-control', min: 0 } }) }}
+                {{ form_errors(form.defence) }}
+              </div>
+
+              <div class="form-group">
+                {{ form_label(form.food) }}
+                {{ form_widget(form.food, { attr: { class: 'form-control', min: 0 } }) }}
+                {{ form_errors(form.food) }}
+              </div>
+
+              <div class="form-group">
+                {{ form_label(form.morale) }}
+                {{ form_widget(form.morale, { attr: { class: 'form-control', min: 0 } }) }}
+                {{ form_errors(form.morale) }}
+              </div>
+
+              <div class="form-group">
+                {{ form_label(form.standing) }}
+                {{ form_widget(form.standing, { attr: { class: 'form-control', min: 0 } }) }}
+                {{ form_errors(form.standing) }}
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <a href="/" class="side-btn">Cancel</a>
+              <button type="submit" class="cta">Create Location</button>
+            </div>
+          {{ form_end(form) }}
+        </article>
+      </section>
+    </main>
+  </div>
+{% endblock %}
