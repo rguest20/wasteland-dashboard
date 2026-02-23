@@ -5,10 +5,16 @@ namespace App\Entity;
 use App\Repository\NpcRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: NpcRepository::class)]
 class Npc
 {
+    public function __construct()
+    {
+        $this->special = new SpecialStats();
+    }
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -31,6 +37,10 @@ class Npc
 
     #[ORM\ManyToOne(inversedBy: 'npcs')]
     private ?Location $location = null;
+
+    #[ORM\Embedded(class: SpecialStats::class, columnPrefix: false)]
+    #[Assert\Valid]
+    private SpecialStats $special;
 
     public function getId(): ?int
     {
@@ -112,6 +122,102 @@ class Npc
     public function setLocation(?Location $location): static
     {
         $this->location = $location;
+
+        return $this;
+    }
+
+    public function getSpecial(): SpecialStats
+    {
+        return $this->special;
+    }
+
+    public function setSpecial(SpecialStats $special): static
+    {
+        $this->special = $special;
+
+        return $this;
+    }
+
+    public function getStrength(): int
+    {
+        return $this->special->getStrength();
+    }
+
+    public function setStrength(int $value): static
+    {
+        $this->special->setStrength($value);
+
+        return $this;
+    }
+
+    public function getPerception(): int
+    {
+        return $this->special->getPerception();
+    }
+
+    public function setPerception(int $value): static
+    {
+        $this->special->setPerception($value);
+
+        return $this;
+    }
+
+    public function getEndurance(): int
+    {
+        return $this->special->getEndurance();
+    }
+
+    public function setEndurance(int $value): static
+    {
+        $this->special->setEndurance($value);
+
+        return $this;
+    }
+
+    public function getCharisma(): int
+    {
+        return $this->special->getCharisma();
+    }
+
+    public function setCharisma(int $value): static
+    {
+        $this->special->setCharisma($value);
+
+        return $this;
+    }
+
+    public function getIntelligence(): int
+    {
+        return $this->special->getIntelligence();
+    }
+
+    public function setIntelligence(int $value): static
+    {
+        $this->special->setIntelligence($value);
+
+        return $this;
+    }
+
+    public function getAgility(): int
+    {
+        return $this->special->getAgility();
+    }
+
+    public function setAgility(int $value): static
+    {
+        $this->special->setAgility($value);
+
+        return $this;
+    }
+
+    public function getLuck(): int
+    {
+        return $this->special->getLuck();
+    }
+
+    public function setLuck(int $value): static
+    {
+        $this->special->setLuck($value);
 
         return $this;
     }

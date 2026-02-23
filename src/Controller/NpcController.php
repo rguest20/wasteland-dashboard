@@ -29,6 +29,13 @@ class NpcController extends AbstractController
                 'role_id' => $npc->getRole()?->getId(),
                 'location' => $npc->getLocation()?->getName(),
                 'location_id' => $npc->getLocation()?->getId(),
+                'strength' => $npc->getSpecial()?->getStrength(),
+                'perception' => $npc->getSpecial()?->getPerception(),
+                'endurance' => $npc->getSpecial()?->getEndurance(),
+                'charisma' => $npc->getSpecial()?->getCharisma(),
+                'intelligence' => $npc->getSpecial()?->getIntelligence(),
+                'agility' => $npc->getSpecial()?->getAgility(),
+                'luck' => $npc->getSpecial()?->getLuck(),
                 'created_at' => $npc->getCreatedAt()?->format(DATE_ATOM),
             ];
         }, $npcs);
@@ -47,6 +54,13 @@ class NpcController extends AbstractController
             'role_id' => $npc->getRole()?->getId(),
             'location' => $npc->getLocation()?->getName(),
             'location_id' => $npc->getLocation()?->getId(),
+            'strength' => $npc->getSpecial()?->getStrength(),
+            'perception' => $npc->getSpecial()?->getPerception(),
+            'endurance' => $npc->getSpecial()?->getEndurance(),
+            'charisma' => $npc->getSpecial()?->getCharisma(),
+            'intelligence' => $npc->getSpecial()?->getIntelligence(),
+            'agility' => $npc->getSpecial()?->getAgility(),
+            'luck' => $npc->getSpecial()?->getLuck(),
             'created_at' => $npc->getCreatedAt()?->format(DATE_ATOM),
             'updated_at' => $npc->getUpdatedAt()?->format(DATE_ATOM),
         ]);
@@ -126,6 +140,13 @@ class NpcController extends AbstractController
         $npc->setName($payload['name'] ?? $npc->getName());
         $npc->setNotes($payload['notes']);
         $npc->setRole($newRole);
+        $npc->setStrength($payload['strength'] ?? $npc->getSpecial()?->getStrength());
+        $npc->setPerception($payload['perception'] ?? $npc->getSpecial()?->getPerception());
+        $npc->setEndurance($payload['endurance'] ?? $npc->getSpecial()?->getEndurance());
+        $npc->setCharisma($payload['charisma'] ?? $npc->getSpecial()?->getCharisma());
+        $npc->setIntelligence($payload['intelligence'] ?? $npc->getSpecial()?->getIntelligence());
+        $npc->setAgility($payload['agility'] ?? $npc->getSpecial()?->getAgility());
+        $npc->setLuck($payload['luck'] ?? $npc->getSpecial()?->getLuck());
         $npc->setUpdatedAt(new \DateTimeImmutable('now', new \DateTimeZone('UTC')));
         $npcService->saveNpc($npc);
 
@@ -137,6 +158,13 @@ class NpcController extends AbstractController
             'role_id' => $npc->getRole()?->getId(),
             'location' => $npc->getLocation()?->getName(),
             'location_id' => $npc->getLocation()?->getId(),
+            'strength' => $npc->getSpecial()?->getStrength(),
+            'perception' => $npc->getSpecial()?->getPerception(),
+            'endurance' => $npc->getSpecial()?->getEndurance(),
+            'charisma' => $npc->getSpecial()?->getCharisma(),
+            'intelligence' => $npc->getSpecial()?->getIntelligence(),
+            'agility' => $npc->getSpecial()?->getAgility(),
+            'luck' => $npc->getSpecial()?->getLuck(),
             'created_at' => $npc->getCreatedAt()->format(DATE_ATOM),
             'updated_at' => $npc->getUpdatedAt()->format(DATE_ATOM),
         ]);

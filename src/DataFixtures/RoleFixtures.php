@@ -6,8 +6,10 @@ use App\Entity\Role;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-class RoleFixtures extends Fixture
+final class RoleFixtures extends Fixture
 {
+    public const MERCHANT_REFERENCE = 'role.merchant';
+
     public function load(ObjectManager $manager): void
     {
         $roles = [
@@ -16,6 +18,8 @@ class RoleFixtures extends Fixture
             'Settler',
             'Brotherhood',
             'Ghoul',
+            'Mercenary',
+            'Scientist',
         ];
 
         foreach ($roles as $name) {
@@ -23,8 +27,17 @@ class RoleFixtures extends Fixture
             $role->setName($name);
 
             $manager->persist($role);
+            $this->addReference($this->refKey($name), $role);
         }
 
         $manager->flush();
+    }
+
+    private function refKey(string $name): string
+    {
+        $slug = strtolower(trim($name));
+        $slug = preg_replace('/\s+/', '-', $slug);
+        $slug = preg_replace('/[^a-z0-9\-]/', '', $slug);
+        return 'role.' . $slug;
     }
 }

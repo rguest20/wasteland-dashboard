@@ -49,6 +49,53 @@
                 {{ form_widget(form.location, { attr: { class: 'form-control' } }) }}
                 {{ form_errors(form.location) }}
               </div>
+
+              <div class="form-group">
+                <p>SPECIAL Stats:</p>
+                <div class="special-grid">
+                  <div>
+                    {{ form_label(form.strength) }}
+                    {{ form_widget(form.strength, { attr: { class: 'form-control', min: 4, max: 12 } }) }}
+                    {{ form_errors(form.strength) }}
+                  </div>
+
+                  <div>
+                    {{ form_label(form.perception) }}
+                    {{ form_widget(form.perception, { attr: { class: 'form-control', min: 4, max: 12 } }) }}
+                    {{ form_errors(form.perception) }}
+                  </div>
+
+                  <div>
+                    {{ form_label(form.endurance) }}
+                    {{ form_widget(form.endurance, { attr: { class: 'form-control', min: 4, max: 12 } }) }}
+                    {{ form_errors(form.endurance) }}
+                  </div>
+
+                  <div>
+                    {{ form_label(form.charisma) }}
+                    {{ form_widget(form.charisma, { attr: { class: 'form-control', min: 4, max: 12 } }) }}
+                    {{ form_errors(form.charisma) }}
+                  </div>
+
+                  <div>
+                    {{ form_label(form.intelligence) }}
+                    {{ form_widget(form.intelligence, { attr: { class: 'form-control', min: 4, max: 12 } }) }}
+                    {{ form_errors(form.intelligence) }}
+                  </div>
+
+                  <div>
+                    {{ form_label(form.agility) }}
+                    {{ form_widget(form.agility, { attr: { class: 'form-control', min: 4, max: 12 } }) }}
+                    {{ form_errors(form.agility) }}
+                  </div>
+
+                  <div>
+                    {{ form_label(form.luck) }}
+                    {{ form_widget(form.luck, { attr: { class: 'form-control', min: 4, max: 12 } }) }}
+                    {{ form_errors(form.luck) }}
+                  </div>
+                </div>
+
             </div>
 
             <div class="form-actions">
