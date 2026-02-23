@@ -9,6 +9,7 @@
       <EntitySidebar
         :entities="entities"
         :active-key="activeKey"
+        active-nav="dashboard"
         @select="switchEntity"
       />
 

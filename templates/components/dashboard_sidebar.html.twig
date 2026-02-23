@@ -1,9 +1,16 @@
-<aside class="sidebar">
-  <p class="side-title">Navigation</p>
-  <nav class="sidebar-nav">
-    <a class="side-btn {{ active == 'dashboard' ? 'active' : '' }}" href="/">Dashboard</a>
-    <a class="side-btn {{ active == 'location_new' ? 'active' : '' }}" href="/locations/new">New Location</a>
-    <a class="side-btn {{ active == 'role_new' ? 'active' : '' }}" href="/roles/new">New Role</a>
-    <a class="side-btn {{ active == 'npc_new' ? 'active' : '' }}" href="/npcs/new">New NPC</a>
-  </nav>
+<aside>
+  <div data-sidebar-app data-active-nav="{{ active|default('') }}"></div>
+  <noscript>
+    <p class="side-title">Navigation</p>
+    <nav class="sidebar-nav">
+      <a class="side-btn {{ active == 'dashboard' ? 'active' : '' }}" href="/">Dashboard</a>
+      <a class="side-btn {{ active == 'role_new' ? 'active' : '' }}" href="/roles/new">New Role</a>
+      <a class="side-btn {{ active == 'location_new' ? 'active' : '' }}" href="/locations/new">New Location</a>
+      <a class="side-btn {{ active == 'npc_new' ? 'active' : '' }}" href="/npcs/new">New NPC</a>
+    </nav>
+  </noscript>
 </aside>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue3-sfc-loader/dist/vue3-sfc-loader.js"></script>
+<script src="/js/sidebar.js"></script>
