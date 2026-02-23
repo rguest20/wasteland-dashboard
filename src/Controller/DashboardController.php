@@ -45,6 +45,28 @@ final class DashboardController extends AbstractController
         ]);
     }
 
+    #[Route('/locations/{id}/update', name: 'location_edit', methods: ['GET', 'PATCH', 'POST'])]
+    public function editLocation(Location $location, Request $request, EntityManagerInterface $em): Response
+    {
+        $form = $this->createForm(LocationType::class, $location, [
+            'method' => 'PATCH',
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+
+            $this->addFlash('success', 'Location updated.');
+
+            return $this->redirectToRoute('dashboard_location', ['id' => $location->getId()]);
+        }
+
+        return $this->render('location/edit.html.twig', [
+            'form' => $form->createView(),
+            'location' => $location,
+        ]);
+    }
+
     #[Route('/roles/new', name: 'role_new', methods: ['GET', 'POST'])]
     public function newRole(Request $request, EntityManagerInterface $em): Response
     {
@@ -64,6 +86,28 @@ final class DashboardController extends AbstractController
 
         return $this->render('role/new.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/roles/{id}/update', name: 'role_edit', methods: ['GET', 'PATCH', 'POST'])]
+    public function editRole(Role $role, Request $request, EntityManagerInterface $em): Response
+    {
+        $form = $this->createForm(RoleType::class, $role, [
+            'method' => 'PATCH',
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+
+            $this->addFlash('success', 'Role updated.');
+
+            return $this->redirectToRoute('dashboard_role', ['id' => $role->getId()]);
+        }
+
+        return $this->render('role/edit.html.twig', [
+            'form' => $form->createView(),
+            'role' => $role,
         ]);
     }
 
@@ -90,6 +134,29 @@ final class DashboardController extends AbstractController
 
         return $this->render('npc/new.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/npcs/{id}/update', name: 'npc_edit', methods: ['GET', 'PATCH', 'POST'])]
+    public function editNpc(Npc $npc, Request $request, EntityManagerInterface $em): Response
+    {
+        $form = $this->createForm(NpcType::class, $npc, [
+            'method' => 'PATCH',
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $npc->setUpdatedAt(new \DateTimeImmutable('now', new \DateTimeZone('UTC')));
+            $em->flush();
+
+            $this->addFlash('success', 'NPC updated.');
+
+            return $this->redirectToRoute('dashboard_npc', ['id' => $npc->getId()]);
+        }
+
+        return $this->render('npc/edit.html.twig', [
+            'form' => $form->createView(),
+            'npc' => $npc,
         ]);
     }
 

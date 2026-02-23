@@ -52,7 +52,9 @@ final class NpcControllerTest extends TestCase
                 'name' => 'Trudy',
                 'notes' => 'Runs the caravan',
                 'role' => 'Merchant',
+                'role_id' => null,
                 'location' => null,
+                'location_id' => null,
                 'created_at' => $createdAt->format(DATE_ATOM),
             ],
         ], $this->decodeJson($response));
@@ -82,7 +84,9 @@ final class NpcControllerTest extends TestCase
             'name' => 'Trudy',
             'notes' => 'Runs the caravan',
             'role' => 'Merchant',
+            'role_id' => null,
             'location' => null,
+            'location_id' => null,
             'created_at' => $createdAt->format(DATE_ATOM),
             'updated_at' => $updatedAt->format(DATE_ATOM),
         ], $this->decodeJson($response));
@@ -114,7 +118,9 @@ final class NpcControllerTest extends TestCase
             'name' => 'Trudy',
             'notes' => 'Runs the caravan',
             'role' => 'Merchant',
+            'role_id' => null,
             'location' => 'Shady Sands',
+            'location_id' => null,
             'created_at' => $createdAt->format(DATE_ATOM),
             'updated_at' => $updatedAt->format(DATE_ATOM),
         ], $this->decodeJson($response));
@@ -209,7 +215,9 @@ final class NpcControllerTest extends TestCase
         self::assertSame('Trudy', $data['name']);
         self::assertSame('Runs the caravan', $data['notes']);
         self::assertSame('Merchant', $data['role']);
+        self::assertNull($data['role_id']);
         self::assertNull($data['location']);
+        self::assertNull($data['location_id']);
         self::assertMatchesRegularExpression('/^\\d{4}-\\d{2}-\\d{2}T/', $data['created_at']);
         self::assertSame($data['created_at'], $data['updated_at']);
     }
@@ -313,7 +321,9 @@ final class NpcControllerTest extends TestCase
         self::assertSame('Trudy Updated', $data['name']);
         self::assertSame('New notes', $data['notes']);
         self::assertSame('Raider', $data['role']);
+        self::assertNull($data['role_id']);
         self::assertNull($data['location']);
+        self::assertNull($data['location_id']);
         self::assertSame($createdAt->format(DATE_ATOM), $data['created_at']);
         self::assertNotSame($oldUpdatedAt->format(DATE_ATOM), $data['updated_at']);
     }

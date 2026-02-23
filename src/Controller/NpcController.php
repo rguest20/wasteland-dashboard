@@ -26,7 +26,9 @@ class NpcController extends AbstractController
                 'name' => $npc->getName(),
                 'notes' => $npc->getNotes(),
                 'role' => $npc->getRole()?->getName(),
+                'role_id' => $npc->getRole()?->getId(),
                 'location' => $npc->getLocation()?->getName(),
+                'location_id' => $npc->getLocation()?->getId(),
                 'created_at' => $npc->getCreatedAt()?->format(DATE_ATOM),
             ];
         }, $npcs);
@@ -42,7 +44,9 @@ class NpcController extends AbstractController
             'name' => $npc->getName(),
             'notes' => $npc->getNotes(),
             'role' => $npc->getRole()?->getName(),
+            'role_id' => $npc->getRole()?->getId(),
             'location' => $npc->getLocation()?->getName(),
+            'location_id' => $npc->getLocation()?->getId(),
             'created_at' => $npc->getCreatedAt()?->format(DATE_ATOM),
             'updated_at' => $npc->getUpdatedAt()?->format(DATE_ATOM),
         ]);
@@ -86,7 +90,9 @@ class NpcController extends AbstractController
             'name' => $npc->getName(),
             'notes' => $npc->getNotes(),
             'role' => $npc->getRole()?->getName(),
+            'role_id' => $npc->getRole()?->getId(),
             'location' => $npc->getLocation()?->getName(),
+            'location_id' => $npc->getLocation()?->getId(),
             'created_at' => $npc->getCreatedAt()->format(DATE_ATOM),
             'updated_at' => $npc->getUpdatedAt()->format(DATE_ATOM),
         ], JsonResponse::HTTP_CREATED);
@@ -128,7 +134,9 @@ class NpcController extends AbstractController
             'name' => $npc->getName(),
             'notes' => $npc->getNotes(),
             'role' => $npc->getRole()?->getName(),
+            'role_id' => $npc->getRole()?->getId(),
             'location' => $npc->getLocation()?->getName(),
+            'location_id' => $npc->getLocation()?->getId(),
             'created_at' => $npc->getCreatedAt()->format(DATE_ATOM),
             'updated_at' => $npc->getUpdatedAt()->format(DATE_ATOM),
         ]);

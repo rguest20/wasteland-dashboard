@@ -15,6 +15,13 @@
           >
             Back
           </button>
+          <a
+            v-if="entity && !loading && !hasError"
+            class="side-btn cta"
+            :href="updateUrl"
+          >
+            Edit {{ entityTypeLabel }}
+          </a>
         </nav>
       </aside>
 
@@ -30,8 +37,20 @@
                 <div class="stat"><span>Standing</span><span>{{ entity.standing }}</span></div>
               </template>
               <template v-else-if="entityType === 'npcs'">
-                <div class="stat"><span>Role</span><span>{{ entity.role || 'Unassigned' }}</span></div>
-                <div class="stat"><span>Location</span><span>{{ entity.location || 'Unassigned' }}</span></div>
+                <div class="stat">
+                  <span>Role</span>
+                  <span>
+                    <a v-if="entity.role_id" class="related-link" :href="`/roles/${entity.role_id}`">{{ entity.role }}</a>
+                    <template v-else>{{ entity.role || 'Unassigned' }}</template>
+                  </span>
+                </div>
+                <div class="stat">
+                  <span>Location</span>
+                  <span>
+                    <a v-if="entity.location_id" class="related-link" :href="`/locations/${entity.location_id}`">{{ entity.location }}</a>
+                    <template v-else>{{ entity.location || 'Unassigned' }}</template>
+                  </span>
+                </div>
                 <div class="stat"><span>Notes</span><span>{{ entity.notes || '-' }}</span></div>
                 <div class="table">
                   <div class="table-row">
@@ -106,6 +125,13 @@ export default {
       if (this.hasError) return 'Entity Details';
       if (!this.entity) return 'Entity Details';
       return `${this.entityTypeLabel} Details`;
+    },
+    updateUrl() {
+      if (!this.entityType || !this.entityId) {
+        return '#';
+      }
+
+      return `/${this.entityType}/${this.entityId}/update`;
     },
   },
   methods: {
