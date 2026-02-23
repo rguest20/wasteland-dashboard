@@ -59,6 +59,50 @@ final class LocationControllerTest extends TestCase
         self::assertSame(['error' => 'Location not found'], $this->decodeJson($response));
     }
 
+    public function testGetReturnsLocationWithNpcList(): void
+    {
+        $location = (new Location())
+            ->setName('Diamond City')
+            ->setDefence(88)
+            ->setFood(77)
+            ->setMorale(66)
+            ->setStanding(55);
+
+        $role = (new Role())->setName('Settler');
+        $npc = (new Npc())
+            ->setId(12)
+            ->setName('Shannon Harris')
+            ->setRole($role)
+            ->setCreatedAt(new \DateTimeImmutable('2026-01-01T10:00:00+00:00'))
+            ->setUpdatedAt(new \DateTimeImmutable('2026-01-01T10:00:00+00:00'));
+        $location->addNpc($npc);
+
+        $repository = $this->createMock(LocationRepository::class);
+        $repository
+            ->expects(self::once())
+            ->method('find')
+            ->with(2)
+            ->willReturn($location);
+
+        $response = (new LocationController())->get(2, new LocationService($repository));
+
+        self::assertSame(JsonResponse::HTTP_OK, $response->getStatusCode());
+        self::assertSame([
+            'id' => null,
+            'name' => 'Diamond City',
+            'defence' => 88,
+            'food' => 77,
+            'morale' => 66,
+            'standing' => 55,
+            'npcs' => [[
+                'id' => 12,
+                'name' => 'Shannon Harris',
+                'role' => 'Settler',
+                'role_id' => null,
+            ]],
+        ], $this->decodeJson($response));
+    }
+
     public function testNpcsReturnsNotFoundWhenLocationDoesNotExist(): void
     {
         $repository = $this->createMock(LocationRepository::class);

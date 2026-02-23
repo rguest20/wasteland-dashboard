@@ -44,7 +44,7 @@ export default {
   },
   methods: {
     cardWidth() {
-      if (this.activeKey === 'NPCs') {
+      if (this.activeKey === 'NPCs' || this.activeKey === 'locations') {
         return 'wide';
       } else {
         return 'standard';

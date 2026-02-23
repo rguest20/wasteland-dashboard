@@ -32,7 +32,7 @@ final class LocationController
             return new JsonResponse(['error' => 'Location not found'], JsonResponse::HTTP_NOT_FOUND);
         }
 
-        return new JsonResponse($this->serializeLocation($location));
+        return new JsonResponse($this->serializeLocation($location, true));
     }
 
     #[Route('/{id}/npcs', name: 'location_npcs', methods: ['GET'])]
@@ -161,9 +161,9 @@ final class LocationController
         return new JsonResponse(['message' => 'Location deleted successfully']);
     }
 
-    private function serializeLocation(Location $location): array
+    private function serializeLocation(Location $location, bool $includeNpcs = false): array
     {
-        return [
+        $payload = [
             'id' => $location->getId(),
             'name' => $location->getName(),
             'defence' => $location->getDefence(),
@@ -171,6 +171,20 @@ final class LocationController
             'morale' => $location->getMorale(),
             'standing' => $location->getStanding(),
         ];
+
+        if ($includeNpcs) {
+            $payload['npcs'] = array_map(
+                static fn (Npc $npc) => [
+                    'id' => $npc->getId(),
+                    'name' => $npc->getName(),
+                    'role' => $npc->getRole()?->getName(),
+                    'role_id' => $npc->getRole()?->getId(),
+                ],
+                $location->getNpcs()->toArray()
+            );
+        }
+
+        return $payload;
     }
 
     private function normalizeString(mixed $value): ?string

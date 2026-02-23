@@ -35,6 +35,21 @@
                 <div class="stat"><span>Food</span><span>{{ entity.food }}</span></div>
                 <div class="stat"><span>Morale</span><span>{{ entity.morale }}</span></div>
                 <div class="stat"><span>Standing</span><span>{{ entity.standing }}</span></div>
+                <div class="nested-section">
+                  <p class="nested-title">NPCs Here</p>
+                  <div class="nested-cards" v-if="(entity.npcs || []).length > 0">
+                    <article class="nested-card" v-for="npc in entity.npcs" :key="`loc-npc-${npc.id}`">
+                      <a class="related-link" :href="`/npcs/${npc.id}`">{{ npc.name }}</a>
+                      <p class="nested-meta">
+                        <span v-if="npc.role_id">
+                          <a class="related-link" :href="`/roles/${npc.role_id}`">{{ npc.role }}</a>
+                        </span>
+                        <span v-else>{{ npc.role || 'Unassigned role' }}</span>
+                      </p>
+                    </article>
+                  </div>
+                  <p class="nested-empty" v-else>No NPCs assigned to this location.</p>
+                </div>
               </template>
               <template v-else-if="entityType === 'npcs'">
                 <div class="stat">
