@@ -9,20 +9,18 @@ use Doctrine\Persistence\ObjectManager;
 final class LocationFixtures extends Fixture
 {
     public const MEGATON_REFERENCE = 'location.megaton';
+    public const DIAMOND_CITY_REFERENCE = 'location.diamond-city';
 
     public function load(ObjectManager $manager): void
     {
         $locations = [
-            ['name' => 'Shady Sands', 'defence' => 1, 'food' => 3, 'morale' => 1, 'standing' => 1],
-            ['name' => 'Junktown', 'defence' => 3, 'food' => 3, 'morale' => 2, 'standing' => 1],
-            ['name' => 'The Hub', 'defence' => 4, 'food' => 3, 'morale' => 2, 'standing' => 1],
-            ['name' => 'Necropolis', 'defence' => 3, 'food' => 2, 'morale' => 3, 'standing' => 1],
-            ['name' => 'Boneyard', 'defence' => 2, 'food' => 4, 'morale' => 5, 'standing' => 1],
+            ['name' => 'Mechminster', 'defence' => 3, 'food' => 2, 'morale' => 2, 'standing' => 1],
+            ['name' => 'Beatsville', 'defence' => 0, 'food' => 2, 'morale' => 4, 'standing' => 1],
+            ['name' => 'Mirage', 'defence' => 3, 'food' => 2, 'morale' => 3, 'standing' => 1],
+            ['name' => 'Big Top', 'defence' => 1, 'food' => 2, 'morale' => 3, 'standing' => 4],
+            ['name' => 'Diamond City', 'defence' => 3, 'food' => 2, 'morale' => 2, 'standing' => 3],
+            ['name' => 'Goodneighbour', 'defence' => 2, 'food' => 1, 'morale' => 1, 'standing' => 1],
             ['name' => 'Megaton', 'defence' => 3, 'food' => 1, 'morale' => 3, 'standing' => 2],
-            ['name' => 'Vault 15', 'defence' => 2, 'food' => 3, 'morale' => 2, 'standing' => 1],
-            ['name' => 'Adytum', 'defence' => 1, 'food' => 2, 'morale' => 2, 'standing' => 1],
-            ['name' => 'The Den', 'defence' => 2, 'food' => 3, 'morale' => 1, 'standing' => 1],
-            ['name' => 'Girdershade', 'defence' => 3, 'food' => 4, 'morale' => 3, 'standing' => 1],
         ];
 
         foreach ($locations as $data) {

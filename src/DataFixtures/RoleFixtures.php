@@ -9,6 +9,7 @@ use Doctrine\Persistence\ObjectManager;
 final class RoleFixtures extends Fixture
 {
     public const MERCHANT_REFERENCE = 'role.merchant';
+    public const DJ_REFERENCE = 'role.dj';
 
     public function load(ObjectManager $manager): void
     {
@@ -20,6 +21,7 @@ final class RoleFixtures extends Fixture
             'Ghoul',
             'Mercenary',
             'Scientist',
+            'DJ',
         ];
 
         foreach ($roles as $name) {

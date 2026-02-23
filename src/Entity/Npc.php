@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\NpcRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -13,6 +15,7 @@ class Npc
     public function __construct()
     {
         $this->special = new SpecialStats();
+        $this->npcSkills = new ArrayCollection();
     }
 
     #[ORM\Id]
@@ -41,6 +44,12 @@ class Npc
     #[ORM\Embedded(class: SpecialStats::class, columnPrefix: false)]
     #[Assert\Valid]
     private SpecialStats $special;
+
+    /**
+     * @var Collection<int, NpcSkill>
+     */
+    #[ORM\OneToMany(targetEntity: NpcSkill::class, mappedBy: 'npc_id', orphanRemoval: true)]
+    private Collection $npcSkills;
 
     public function getId(): ?int
     {
@@ -218,6 +227,36 @@ class Npc
     public function setLuck(int $value): static
     {
         $this->special->setLuck($value);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, NpcSkill>
+     */
+    public function getNpcSkills(): Collection
+    {
+        return $this->npcSkills;
+    }
+
+    public function addNpcSkill(NpcSkill $npcSkill): static
+    {
+        if (!$this->npcSkills->contains($npcSkill)) {
+            $this->npcSkills->add($npcSkill);
+            $npcSkill->setNpcId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNpcSkill(NpcSkill $npcSkill): static
+    {
+        if ($this->npcSkills->removeElement($npcSkill)) {
+            // set the owning side to null (unless already changed)
+            if ($npcSkill->getNpcId() === $this) {
+                $npcSkill->setNpcId(null);
+            }
+        }
 
         return $this;
     }
