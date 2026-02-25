@@ -13,12 +13,13 @@ Built to demonstrate Symfony + Doctrine domain modelling (explicit relationships
 
 - Docker + Docker Compose
 
-## Tech Stack
+## Tech stack
 
-- Symfony, Doctrine ORM, Twig, Symfony Forms, PHPUnit
-- Vue 3 for dashboard
-- Docker Compose
-- MySQL
+- **Backend:** PHP 8.4+, Symfony 8.0
+- **Persistence:** Doctrine ORM 3.6 + DBAL 4.4, Doctrine Migrations
+- **UI:** Twig + Symfony Forms (CRUD pages), Vue 3 (dashboard)
+- **Testing:** PHPUnit 13
+- **Dev tooling:** Docker Compose
 
 ## Running with Docker
 
@@ -56,6 +57,16 @@ docker compose exec npc-store-runtime php bin/console doctrine:fixtures:load --n
 docker compose down -v
 ```
 
+## Project structure
+
+- `src/Entity` — Doctrine entities + embeddables (e.g. `SpecialStats`)
+- `src/Repository` — QueryBuilder-based repositories
+- `src/Form` — Symfony Form types (including collections for skills/knowledge)
+- `src/Controller` — HTML controllers + JSON API controllers
+- `templates/` — Twig templates
+- `public/components/` — Vue SFCs for the dashboard
+- `public/js/` — Vue bootstrap/loader
+
 ## Frontend
 
 - Main dashboard: `/`
@@ -69,6 +80,11 @@ docker compose down -v
   - `/npcs/new`, `/npcs/{id}/update`
   - `/roles/new`, `/roles/{id}/update`
   - `/worldsecrets/new`, `/worldsecrets/{id}/update`
+
+## Frontend approach
+
+The dashboard (`/`) uses a small Vue 3 app to provide fast entity switching and client-side filtering.
+CRUD pages (create/update) and detail pages are rendered server-side using Twig + Symfony Forms.
 
 ## Core Entities and Relationships
 
@@ -116,12 +132,40 @@ docker compose down -v
 
 ## API Endpoints (JSON)
 
-- `/api/locations`
-- `/api/npcs`
-- `/api/roles`
-- `/api/worldsecrets`
+All primary entities expose full REST-style endpoints.
 
-Each supports list/get/create/update/delete in the relevant controller.
+### Health
+- `GET /api/health`
+
+### Locations
+- `GET /api/locations`
+- `GET /api/locations/{id}`
+- `GET /api/locations/{id}/npcs`
+- `POST /api/locations`
+- `PUT /api/locations/{id}`
+- `DELETE /api/locations/{id}`
+
+### NPCs
+- `GET /api/npcs`
+- `GET /api/npcs/{id}`
+- `POST /api/npcs`
+- `PUT /api/npcs/{id}`
+- `PUT /api/npcs/{id}/location` (move NPC between locations)
+- `DELETE /api/npcs/{id}`
+
+### Roles
+- `GET /api/roles`
+- `GET /api/roles/{id}`
+- `POST /api/roles`
+- `PUT /api/roles/{id}`
+- `DELETE /api/roles/{id}`
+
+### World Secrets
+- `GET /api/worldsecrets`
+- `GET /api/worldsecrets/{id}`
+- `POST /api/worldsecrets`
+- `PUT /api/worldsecrets/{id}`
+- `DELETE /api/worldsecrets/{id}`
 
 ## Tests
 
