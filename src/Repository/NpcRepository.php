@@ -17,7 +17,7 @@ class NpcRepository extends ServiceEntityRepository
         parent::__construct($registry, Npc::class);
     }
 
-    public function findAllWithRole(): array
+    public function findAllWithRelations(): array
     {
         return $this->createQueryBuilder('n')
             ->leftJoin('n.role', 'r')
@@ -35,7 +35,7 @@ class NpcRepository extends ServiceEntityRepository
         $em->flush();
     }
 
-    public function findOneWithRole(int $id): ?Npc
+    public function findOneWithRelations(int $id): ?Npc
     {
         return $this->createQueryBuilder('n')
             ->leftJoin('n.role', 'r')

@@ -1,0 +1,15 @@
+<div class="npc-skill-row">
+  <div class="npc-skill-fields">
+    <div class="form-group">
+      {{ form_label(skillForm.skill_id) }}
+      {{ form_widget(skillForm.skill_id, { attr: { class: 'form-control' } }) }}
+      {{ form_errors(skillForm.skill_id) }}
+    </div>
+    <div class="form-group">
+      {{ form_label(skillForm.level) }}
+      {{ form_widget(skillForm.level, { attr: { class: 'form-control', min: 1, max: 6 } }) }}
+      {{ form_errors(skillForm.level) }}
+    </div>
+  </div>
+  <button type="button" class="side-btn npc-skill-remove" data-action="remove-item">Remove</button>
+</div>

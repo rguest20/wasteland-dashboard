@@ -28,7 +28,7 @@
       <main class="content">
         <section class="cards" v-if="entity && !loading && !hasError">
           <article class="card">
-            <h3>{{ entity.name || `${entityTypeLabel} ${entityId}` }}</h3>
+            <h3>{{ entity.name || entity.title || `${entityTypeLabel} ${entityId}` }}</h3>
             <div class="stats">
               <template v-if="entityType === 'locations'">
                 <div class="stat"><span>Defence</span><span>{{ entity.defence }}</span></div>
@@ -99,11 +99,57 @@
                     </div>
                   </div>
                 </div>
+                <div class="nested-section">
+                  <p class="nested-title">Skills</p>
+                  <div class="skill-cards" v-if="(entity.skills || []).length > 0">
+                    <article class="skill-card" v-for="skill in entity.skills" :key="`npc-skill-${skill.id}-${skill.level}`">
+                      <p class="skill-name">{{ skill.name || 'Unknown Skill' }}</p>
+                      <p class="skill-level">Level {{ skill.level ?? '-' }}</p>
+                    </article>
+                  </div>
+                  <p class="nested-empty" v-else>No skills assigned.</p>
+                </div>
+                <div class="nested-section">
+                  <p class="nested-title">Knowledge</p>
+                  <div class="nested-cards wide" v-if="(entity.knowledge || []).length > 0">
+                    <article class="nested-card" v-for="knowledge in entity.knowledge" :key="`npc-knowledge-${knowledge.id}`">
+                      <p class="knowledge-name">{{ knowledge.title || 'Unknown Knowledge' }}</p>
+                      <pre class="knowledge-description">{{ knowledge.description || 'No description' }}</pre>
+                      <p class="knowledge-category">{{ knowledge.category || 'Uncategorized' }}</p>
+                      <p v-if="knowledge.world_secret_id" class="knowledge-secret-tag">
+                        <a class="related-link" :href="`/worldsecrets/${knowledge.world_secret_id}`">
+                          {{ knowledge.world_secret_title || 'Unknown Secret' }}
+                        </a>
+                      </p>
+                    </article>
+                  </div>
+                  <p class="nested-empty" v-else>No knowledge assigned.</p>
+                </div>
                 <div class="stat"><span>Created</span><span>{{ entity.created_at || '-' }}</span></div>
               </template>
               <template v-else-if="entityType === 'roles'">
                 <div class="stat"><span>Description</span><span>{{ entity.description || '-' }}</span></div>
                 <div class="stat"><span>ID</span><span>{{ entity.id ?? '-' }}</span></div>
+              </template>
+              <template v-else-if="entityType === 'worldsecrets'">
+                <div class="stat"><span>Category</span><span>{{ entity.category || '-' }}</span></div>
+                <div class="stat"><span>Description</span><span>{{ entity.description || '-' }}</span></div>
+                <div class="nested-section">
+                  <p class="nested-title">Knowledge Tied To This Secret</p>
+                  <div class="nested-cards" v-if="(entity.knowledge || []).length > 0">
+                    <article class="nested-card" v-for="knowledge in entity.knowledge" :key="`secret-knowledge-${knowledge.id}`">
+                      <p class="knowledge-name">{{ knowledge.title || 'Unknown Knowledge' }}</p>
+                      <p class="knowledge-category">{{ knowledge.category || 'Uncategorized' }}</p>
+                      <p class="nested-meta">
+                        <span v-if="knowledge.npc_id">
+                          <a class="related-link" :href="`/npcs/${knowledge.npc_id}`">{{ knowledge.npc_name || 'Unknown NPC' }}</a>
+                        </span>
+                        <span v-else>Unassigned NPC</span>
+                      </p>
+                    </article>
+                  </div>
+                  <p class="nested-empty" v-else>No knowledge linked.</p>
+                </div>
               </template>
             </div>
           </article>
@@ -133,6 +179,7 @@ export default {
       if (this.entityType === 'npcs') return 'NPC';
       if (this.entityType === 'locations') return 'Location';
       if (this.entityType === 'roles') return 'Role';
+      if (this.entityType === 'worldsecrets') return 'World Secret';
       return 'Entity';
     },
     heading() {
@@ -158,7 +205,7 @@ export default {
     async loadEntity() {
       this.resolveRouteContext();
 
-      if (!['npcs', 'locations', 'roles'].includes(this.entityType) || !this.entityId) {
+      if (!['npcs', 'locations', 'roles', 'worldsecrets'].includes(this.entityType) || !this.entityId) {
         this.entity = null;
         this.hasError = true;
         this.status = 'Unsupported detail URL.';

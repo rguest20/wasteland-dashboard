@@ -11,7 +11,7 @@
         moduleCache: { vue: window.Vue },
 
         async getFile(url) {
-            const response = await fetch(url);
+            const response = await fetch(url, { cache: 'no-store' });
             if (!response.ok) {
                 throw new Error(`${url} ${response.status} ${response.statusText}`);
             }
@@ -32,7 +32,8 @@
     
     async function mount() {
         try {
-            const App = await loadModule('/components/EntityDashboard.vue', options);
+            const appUrl = `/components/EntityDashboard.vue?v=${Date.now()}`;
+            const App = await loadModule(appUrl, options);
             window.Vue.createApp(App).mount('#app');
         }
         catch (err) {

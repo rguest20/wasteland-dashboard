@@ -4,8 +4,12 @@ namespace App\Tests\Controller;
 
 use App\Controller\NpcController;
 use App\Entity\Location;
+use App\Entity\Knowledge;
 use App\Entity\Npc;
+use App\Entity\NpcSkill;
 use App\Entity\Role;
+use App\Entity\Skill;
+use App\Entity\WorldSecret;
 use App\Repository\LocationRepository;
 use App\Repository\NpcRepository;
 use App\Repository\RoleRepository;
@@ -35,7 +39,7 @@ final class NpcControllerTest extends TestCase
         $npcRepository = $this->createMock(NpcRepository::class);
         $npcRepository
             ->expects(self::once())
-            ->method('findAllWithRole')
+            ->method('findAllWithRelations')
             ->willReturn([$npc]);
 
         $npcService = new NpcService(
@@ -62,6 +66,8 @@ final class NpcControllerTest extends TestCase
                 'intelligence' => 5,
                 'agility' => 5,
                 'luck' => 5,
+                'skills' => [],
+                'knowledge' => [],
                 'created_at' => $createdAt->format(DATE_ATOM),
             ],
         ], $this->decodeJson($response));
@@ -101,6 +107,8 @@ final class NpcControllerTest extends TestCase
             'intelligence' => 5,
             'agility' => 5,
             'luck' => 5,
+            'skills' => [],
+            'knowledge' => [],
             'created_at' => $createdAt->format(DATE_ATOM),
             'updated_at' => $updatedAt->format(DATE_ATOM),
         ], $this->decodeJson($response));
@@ -142,9 +150,97 @@ final class NpcControllerTest extends TestCase
             'intelligence' => 5,
             'agility' => 5,
             'luck' => 5,
+            'skills' => [],
+            'knowledge' => [],
             'created_at' => $createdAt->format(DATE_ATOM),
             'updated_at' => $updatedAt->format(DATE_ATOM),
         ], $this->decodeJson($response));
+    }
+
+    public function testGetReturnsNpcWithSkillsWhenPresent(): void
+    {
+        $createdAt = new \DateTimeImmutable('2026-01-01T10:00:00+00:00');
+        $updatedAt = new \DateTimeImmutable('2026-01-02T10:00:00+00:00');
+
+        $speech = (new Skill())->setName('Speech');
+        $barter = (new Skill())->setName('Barter');
+
+        $npc = (new Npc())
+            ->setId(77)
+            ->setName('Moira Brown')
+            ->setNotes('Wasteland guide')
+            ->setCreatedAt($createdAt)
+            ->setUpdatedAt($updatedAt);
+
+        $npcSkillOne = (new NpcSkill())
+            ->setNpcId($npc)
+            ->setSkillId($speech)
+            ->setLevel(6);
+        $npcSkillTwo = (new NpcSkill())
+            ->setNpcId($npc)
+            ->setSkillId($barter)
+            ->setLevel(5);
+
+        $npc->addNpcSkill($npcSkillOne);
+        $npc->addNpcSkill($npcSkillTwo);
+
+        $response = $this->createController()->get($npc);
+
+        self::assertSame(JsonResponse::HTTP_OK, $response->getStatusCode());
+        $data = $this->decodeJson($response);
+        self::assertSame(77, $data['id']);
+        self::assertSame('Moira Brown', $data['name']);
+        self::assertCount(2, $data['skills']);
+        self::assertSame('Speech', $data['skills'][0]['name']);
+        self::assertSame(6, $data['skills'][0]['level']);
+        self::assertSame('Barter', $data['skills'][1]['name']);
+        self::assertSame(5, $data['skills'][1]['level']);
+        self::assertSame([], $data['knowledge']);
+    }
+
+    public function testGetReturnsNpcWithKnowledgeWhenPresent(): void
+    {
+        $createdAt = new \DateTimeImmutable('2026-01-01T10:00:00+00:00');
+        $updatedAt = new \DateTimeImmutable('2026-01-02T10:00:00+00:00');
+
+        $npc = (new Npc())
+            ->setId(88)
+            ->setName('Ezekiel')
+            ->setNotes('Radio host')
+            ->setCreatedAt($createdAt)
+            ->setUpdatedAt($updatedAt);
+
+        $knowledgeOne = (new Knowledge())
+            ->setTitle('Brotherhood Frequencies')
+            ->setDescription('Knows old BOS signal patterns.')
+            ->setCategory('Military Intel');
+        $knowledgeTwo = (new Knowledge())
+            ->setTitle('Market Gossip')
+            ->setDescription('Tracks caravan rumors and prices.')
+            ->setCategory('Trade');
+
+        $worldSecret = (new WorldSecret())
+            ->setTitle('Project Purity Logs')
+            ->setDescription('Hidden Enclave notes.')
+            ->setCategory('Enclave');
+        $knowledgeOne->setWorldSecret($worldSecret);
+
+        $npc->addKnowledge($knowledgeOne);
+        $npc->addKnowledge($knowledgeTwo);
+
+        $response = $this->createController()->get($npc);
+
+        self::assertSame(JsonResponse::HTTP_OK, $response->getStatusCode());
+        $data = $this->decodeJson($response);
+        self::assertCount(2, $data['knowledge']);
+        self::assertSame('Brotherhood Frequencies', $data['knowledge'][0]['title']);
+        self::assertSame('Military Intel', $data['knowledge'][0]['category']);
+        self::assertNull($data['knowledge'][0]['world_secret_id']);
+        self::assertSame('Project Purity Logs', $data['knowledge'][0]['world_secret_title']);
+        self::assertSame('Market Gossip', $data['knowledge'][1]['title']);
+        self::assertSame('Trade', $data['knowledge'][1]['category']);
+        self::assertNull($data['knowledge'][1]['world_secret_id']);
+        self::assertNull($data['knowledge'][1]['world_secret_title']);
     }
 
     public function testCreateReturnsBadRequestForInvalidJson(): void
@@ -495,7 +591,7 @@ final class NpcControllerTest extends TestCase
         $npcRepository = $this->createMock(NpcRepository::class);
         $npcRepository
             ->expects(self::once())
-            ->method('findOneWithRole')
+            ->method('findOneWithRelations')
             ->with(8)
             ->willReturn(null);
 

@@ -7,6 +7,7 @@ use App\Entity\Npc;
 use App\Entity\Role;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -40,6 +41,28 @@ class NpcType extends AbstractType
                 'choice_label' => 'name',
                 'placeholder' => 'Choose a location',
                 'required' => false,
+            ])
+            ->add('npcSkills', CollectionType::class, [
+                'entry_type' => NpcSkillType::class,
+                'entry_options' => [
+                    'label' => false,
+                ],
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'required' => false,
+                'prototype' => true,
+            ])
+            ->add('knowledge', CollectionType::class, [
+                'entry_type' => KnowledgeType::class,
+                'entry_options' => [
+                    'label' => false,
+                ],
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'required' => false,
+                'prototype' => true,
             ])
         ;
     }

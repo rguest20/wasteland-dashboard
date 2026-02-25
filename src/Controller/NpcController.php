@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Dto\CreateNpcRequest;
+use App\Entity\Knowledge;
 use App\Entity\Npc;
+use App\Entity\NpcSkill;
 use App\Service\LocationService;
 use App\Service\NpcService;
 use App\Service\RoleService;
@@ -36,6 +38,8 @@ class NpcController extends AbstractController
                 'intelligence' => $npc->getSpecial()?->getIntelligence(),
                 'agility' => $npc->getSpecial()?->getAgility(),
                 'luck' => $npc->getSpecial()?->getLuck(),
+                'skills' => $this->serializeSkills($npc),
+                'knowledge' => $this->serializeKnowledge($npc),
                 'created_at' => $npc->getCreatedAt()?->format(DATE_ATOM),
             ];
         }, $npcs);
@@ -61,6 +65,8 @@ class NpcController extends AbstractController
             'intelligence' => $npc->getSpecial()?->getIntelligence(),
             'agility' => $npc->getSpecial()?->getAgility(),
             'luck' => $npc->getSpecial()?->getLuck(),
+            'skills' => $this->serializeSkills($npc),
+            'knowledge' => $this->serializeKnowledge($npc),
             'created_at' => $npc->getCreatedAt()?->format(DATE_ATOM),
             'updated_at' => $npc->getUpdatedAt()?->format(DATE_ATOM),
         ]);
@@ -223,5 +229,34 @@ class NpcController extends AbstractController
         return new JsonResponse([
             'message' => 'NPC deleted successfully',
         ]);
+    }
+
+    private function serializeSkills(Npc $npc): array
+    {
+        return $npc->getNpcSkills()
+            ->map(static function (NpcSkill $npcSkill): array {
+                return [
+                    'id' => $npcSkill->getSkillId()?->getId(),
+                    'name' => $npcSkill->getSkillId()?->getName(),
+                    'level' => $npcSkill->getLevel(),
+                ];
+            })
+            ->toArray();
+    }
+
+    private function serializeKnowledge(Npc $npc): array
+    {
+        return $npc->getKnowledge()
+            ->map(static function (Knowledge $knowledge): array {
+                return [
+                    'id' => $knowledge->getId(),
+                    'title' => $knowledge->getTitle(),
+                    'description' => $knowledge->getDescription(),
+                    'category' => $knowledge->getCategory(),
+                    'world_secret_id' => $knowledge->getWorldSecret()?->getId(),
+                    'world_secret_title' => $knowledge->getWorldSecret()?->getTitle(),
+                ];
+            })
+            ->toArray();
     }
 }

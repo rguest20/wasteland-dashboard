@@ -1,0 +1,25 @@
+<div class="npc-knowledge-row">
+  <div class="npc-knowledge-fields">
+    <div class="form-group">
+      {{ form_label(knowledgeForm.title) }}
+      {{ form_widget(knowledgeForm.title, { attr: { class: 'form-control', placeholder: 'Knowledge title' } }) }}
+      {{ form_errors(knowledgeForm.title) }}
+    </div>
+    <div class="form-group">
+      {{ form_label(knowledgeForm.category) }}
+      {{ form_widget(knowledgeForm.category, { attr: { class: 'form-control', placeholder: 'Category (optional)' } }) }}
+      {{ form_errors(knowledgeForm.category) }}
+    </div>
+    <div class="form-group">
+      {{ form_label(knowledgeForm.world_secret) }}
+      {{ form_widget(knowledgeForm.world_secret, { attr: { class: 'form-control' } }) }}
+      {{ form_errors(knowledgeForm.world_secret) }}
+    </div>
+    <div class="form-group full-width">
+      {{ form_label(knowledgeForm.description) }}
+      {{ form_widget(knowledgeForm.description, { attr: { class: 'form-control', rows: 3, placeholder: 'What does this NPC know?' } }) }}
+      {{ form_errors(knowledgeForm.description) }}
+    </div>
+  </div>
+  <button type="button" class="side-btn npc-knowledge-remove" data-action="remove-item">Remove</button>
+</div>

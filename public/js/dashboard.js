@@ -12,7 +12,7 @@
     moduleCache: { vue: window.Vue },
 
     async getFile(url) {
-      const response = await fetch(url);
+      const response = await fetch(url, { cache: 'no-store' });
       if (!response.ok) {
         throw new Error(`${url} ${response.status} ${response.statusText}`);
       }
@@ -33,7 +33,8 @@
 
   async function mount() {
     try {
-      const App = await loadModule('/components/DashboardApp.vue', options);
+      const appUrl = `/components/DashboardApp.vue?v=${Date.now()}`;
+      const App = await loadModule(appUrl, options);
       window.Vue.createApp(App).mount('#app');
     } catch (err) {
       console.error('Failed to mount dashboard app:', err);

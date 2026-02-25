@@ -13,7 +13,7 @@
     moduleCache: { vue: window.Vue },
 
     async getFile(url) {
-      const response = await fetch(url);
+      const response = await fetch(url, { cache: 'no-store' });
       if (!response.ok) {
         throw new Error(`${url} ${response.status} ${response.statusText}`);
       }
@@ -33,12 +33,13 @@
   const { loadModule } = window['vue3-sfc-loader'];
 
   async function mount() {
-    const targets = document.querySelectorAll('aside');
+    const targets = document.querySelectorAll('[data-sidebar-app]');
     if (targets.length === 0) {
       return;
     }
 
-    const EntitySidebar = await loadModule('/components/EntitySidebar.vue', options);
+    const componentUrl = `/components/EntitySidebar.vue?v=${Date.now()}`;
+    const EntitySidebar = await loadModule(componentUrl, options);
 
     targets.forEach((target) => {
       const activeNav = target.dataset.activeNav || '';

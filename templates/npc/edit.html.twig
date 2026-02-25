@@ -7,6 +7,11 @@
   <link rel="stylesheet" href="/css/dashboard.css">
 {% endblock %}
 
+{% block javascripts %}
+  {{ parent() }}
+  <script src="/js/npc_skills_form.js" defer></script>
+{% endblock %}
+
 {% block body %}
   <header class="search-bar">
     <h1 class="title">Update NPC</h1>
@@ -95,7 +100,53 @@
                     {{ form_errors(form.luck) }}
                   </div>
                 </div>
+              </div>
 
+              <div class="form-group">
+                <div class="skills-head">
+                  <p>Skills:</p>
+                  <button type="button" class="side-btn add-skill-btn" data-action="add-skill">Add Skill</button>
+                </div>
+                {% set prototype %}
+                  {% set skillForm = form.npcSkills.vars.prototype %}
+                  {% include 'npc/_skill_row.html.twig' %}
+                {% endset %}
+                <div
+                  class="npc-skills-collection"
+                  data-collection-holder
+                  data-add-action="add-skill"
+                  data-index="{{ form.npcSkills|length }}"
+                  data-prototype="{{ prototype|e('html_attr') }}"
+                >
+                  {% for skillForm in form.npcSkills %}
+                    {% include 'npc/_skill_row.html.twig' %}
+                  {% endfor %}
+                </div>
+                {{ form_errors(form.npcSkills) }}
+              </div>
+
+              <div class="form-group">
+                <div class="skills-head">
+                  <p>Knowledge:</p>
+                  <button type="button" class="side-btn add-skill-btn" data-action="add-knowledge">Add Knowledge</button>
+                </div>
+                {% set prototype %}
+                  {% set knowledgeForm = form.knowledge.vars.prototype %}
+                  {% include 'npc/_knowledge_row.html.twig' %}
+                {% endset %}
+                <div
+                  class="npc-knowledge-collection"
+                  data-collection-holder
+                  data-add-action="add-knowledge"
+                  data-index="{{ form.knowledge|length }}"
+                  data-prototype="{{ prototype|e('html_attr') }}"
+                >
+                  {% for knowledgeForm in form.knowledge %}
+                    {% include 'npc/_knowledge_row.html.twig' %}
+                  {% endfor %}
+                </div>
+                {{ form_errors(form.knowledge) }}
+              </div>
             </div>
 
             <div class="form-actions">

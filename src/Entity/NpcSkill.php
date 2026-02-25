@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\NpcSkillRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: NpcSkillRepository::class)]
 class NpcSkill
@@ -22,6 +23,7 @@ class NpcSkill
     private ?Skill $skill_id = null;
 
     #[ORM\Column]
+    #[Assert\Range(min: 1, max: 6)]
     private ?int $level = null;
 
     public function getId(): ?int

@@ -235,11 +235,55 @@ body {
   gap: 10px;
 }
 
+.nested-cards.wide {
+  grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+}
+
+@media screen and (max-width: 550px) {
+  .nested-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .nested-cards.wide {
+    grid-template-columns: 1fr;
+  }
+}
+
 .nested-card {
   background: #3a3a3a;
   border: 1px solid #5a5a5a;
   border-radius: 10px;
   padding: 10px;
+}
+
+.nested-card .knowledge-name{
+  margin-top: 0 ;
+  font-weight: 700;
+}
+
+.nested-card .knowledge-description {
+  font-size: 12px;
+  font-family: "IBM Plex Mono", "SF Mono", Menlo, Consolas, monospace;
+}
+
+.nested-card .knowledge-category {
+  font-size: 10px;
+  font-style: italic;
+}
+
+.knowledge-secret-tag {
+  margin: 10px 0 0;
+  padding: 4px 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(99, 255, 140, 0.45);
+  border-radius: 999px;
+  background: rgba(99, 255, 140, 0.1);
+  color: var(--pipboy);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .nested-meta {
@@ -254,6 +298,31 @@ body {
   font-size: 14px;
 }
 
+.skill-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 8px;
+}
+
+.skill-card {
+  background: #3a3a3a;
+  border: 1px solid #5a5a5a;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.skill-name {
+  margin: 0 0 4px;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.skill-level {
+  margin: 0;
+  color: var(--pipboy);
+  font-size: 13px;
+}
+
 .stat span:last-child {
   color: var(--text);
   font-weight: 700;
@@ -264,7 +333,7 @@ body {
 
 .related-link {
   color: var(--pipboy);
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 .related-link:hover {
@@ -335,6 +404,76 @@ body {
   margin: 0;
 }
 
+.skills-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.skills-head p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.add-skill-btn {
+  width: auto;
+}
+
+.npc-skills-collection {
+  display: grid;
+  gap: 10px;
+}
+
+.npc-skill-row {
+  border: 1px solid #5a5a5a;
+  border-radius: 10px;
+  padding: 10px;
+  display: grid;
+  gap: 10px;
+  background: #3b3b3b;
+}
+
+.npc-skill-fields {
+  display: grid;
+  grid-template-columns: 1fr 140px;
+  gap: 10px;
+}
+
+.npc-skill-remove {
+  width: auto;
+  justify-self: start;
+}
+
+.npc-knowledge-collection {
+  display: grid;
+  gap: 10px;
+}
+
+.npc-knowledge-row {
+  border: 1px solid #5a5a5a;
+  border-radius: 10px;
+  padding: 10px;
+  display: grid;
+  gap: 10px;
+  background: #3b3b3b;
+}
+
+.npc-knowledge-fields {
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  gap: 10px;
+}
+
+.npc-knowledge-fields .full-width {
+  grid-column: 1 / -1;
+}
+
+.npc-knowledge-remove {
+  width: auto;
+  justify-self: start;
+}
+
 @media (max-width: 840px) {
   .layout { grid-template-columns: 1fr; }
 
@@ -363,5 +502,13 @@ body {
   .form-actions .cta {
     width: 100%;
     text-align: center;
+  }
+
+  .npc-skill-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .npc-knowledge-fields {
+    grid-template-columns: 1fr;
   }
 }

@@ -39,8 +39,16 @@ export default {
     return {
       entities: [
         { key: 'locations', label: 'Locations', title: 'Wasteland Locations', cta: 'Add Location', ctaEndpoint: '/locations/new', endpoint: '/api/locations' },
-        { key: 'NPCs', label: 'NPCs', title: 'Wasteland NPCs', cta: 'Add NPC', ctaEndpoint: '/npcs/new', endpoint: '/api/npcs' },
+        { key: 'npcs', label: 'NPCs', title: 'Wasteland NPCs', cta: 'Add NPC', ctaEndpoint: '/npcs/new', endpoint: '/api/npcs' },
         { key: 'roles', label: 'Roles', title: 'Wasteland Roles', cta: 'Add Role', ctaEndpoint: '/roles/new', endpoint: '/api/roles' },
+        {
+          key: 'worldsecrets',
+          label: 'World Secrets',
+          title: 'Wasteland World Secrets',
+          cta: 'Add World Secret',
+          ctaEndpoint: '/worldsecrets/new',
+          endpoint: '/api/worldsecrets',
+        },
       ],
       activeKey: 'locations',
       query: '',
@@ -60,7 +68,7 @@ export default {
       if (!q) return this.items;
 
       return this.items.filter((item) => {
-        const haystack = [item.name, item.description, item.role, item.location]
+        const haystack = [item.name, item.title, item.description, item.role, item.location, item.category]
           .filter(Boolean)
           .join(' ')
           .toLowerCase();

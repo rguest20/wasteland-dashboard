@@ -19,12 +19,12 @@ class NpcService
 
     public function getAllNpcs(): array
     {
-        return $this->npcRepository->findAllWithRole();
+        return $this->npcRepository->findAllWithRelations();
     }
 
     public function getNpcById(int $id): ?Npc
     {
-        return $this->npcRepository->findOneWithRole($id);
+        return $this->npcRepository->findOneWithRelations($id);
     }
 
     public function deleteNpc(Npc $npc): void

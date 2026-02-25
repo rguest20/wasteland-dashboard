@@ -10,9 +10,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Location;
 use App\Entity\Npc;
 use App\Entity\Role;
+use App\Entity\WorldSecret;
 use App\Form\LocationType;
 use App\Form\NpcType;
 use App\Form\RoleType;
+use App\Form\WorldSecretType;
 
 final class DashboardController extends AbstractController
 {
@@ -160,9 +162,54 @@ final class DashboardController extends AbstractController
         ]);
     }
 
+    #[Route('/worldsecrets/new', name: 'world_secret_new', methods: ['GET', 'POST'])]
+    public function newWorldSecret(Request $request, EntityManagerInterface $em): Response
+    {
+        $worldSecret = new WorldSecret();
+
+        $form = $this->createForm(WorldSecretType::class, $worldSecret);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($worldSecret);
+            $em->flush();
+
+            $this->addFlash('success', 'World secret created.');
+
+            return $this->redirectToRoute('dashboard_index');
+        }
+
+        return $this->render('worldsecret/new.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/worldsecrets/{id}/update', name: 'world_secret_edit', methods: ['GET', 'PATCH', 'POST'])]
+    public function editWorldSecret(WorldSecret $worldSecret, Request $request, EntityManagerInterface $em): Response
+    {
+        $form = $this->createForm(WorldSecretType::class, $worldSecret, [
+            'method' => 'PATCH',
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+
+            $this->addFlash('success', 'World secret updated.');
+
+            return $this->redirectToRoute('dashboard_world_secret', ['id' => $worldSecret->getId()]);
+        }
+
+        return $this->render('worldsecret/edit.html.twig', [
+            'form' => $form->createView(),
+            'worldSecret' => $worldSecret,
+        ]);
+    }
+
     #[Route('/npcs/{id}', name: 'dashboard_npc', methods: ['GET'])]
     #[Route('/locations/{id}', name: 'dashboard_location', methods: ['GET'])]
     #[Route('/roles/{id}', name: 'dashboard_role', methods: ['GET'])]
+    #[Route('/worldsecrets/{id}', name: 'dashboard_world_secret', methods: ['GET'])]
     public function entityDetail(): Response
     {
         return $this->render('dashboard/detail.html.twig');

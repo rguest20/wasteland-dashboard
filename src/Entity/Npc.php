@@ -16,6 +16,7 @@ class Npc
     {
         $this->special = new SpecialStats();
         $this->npcSkills = new ArrayCollection();
+        $this->knowledge = new ArrayCollection();
     }
 
     #[ORM\Id]
@@ -48,8 +49,14 @@ class Npc
     /**
      * @var Collection<int, NpcSkill>
      */
-    #[ORM\OneToMany(targetEntity: NpcSkill::class, mappedBy: 'npc_id', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: NpcSkill::class, mappedBy: 'npc_id', orphanRemoval: true, cascade: ['persist'])]
     private Collection $npcSkills;
+
+    /**
+     * @var Collection<int, Knowledge>
+     */
+    #[ORM\OneToMany(targetEntity: Knowledge::class, mappedBy: 'npc', orphanRemoval: true, cascade: ['persist'])]
+    private Collection $knowledge;
 
     public function getId(): ?int
     {
@@ -255,6 +262,36 @@ class Npc
             // set the owning side to null (unless already changed)
             if ($npcSkill->getNpcId() === $this) {
                 $npcSkill->setNpcId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Knowledge>
+     */
+    public function getKnowledge(): Collection
+    {
+        return $this->knowledge;
+    }
+
+    public function addKnowledge(Knowledge $knowledge): static
+    {
+        if (!$this->knowledge->contains($knowledge)) {
+            $this->knowledge->add($knowledge);
+            $knowledge->setNpc($this);
+        }
+
+        return $this;
+    }
+
+    public function removeKnowledge(Knowledge $knowledge): static
+    {
+        if ($this->knowledge->removeElement($knowledge)) {
+            // set the owning side to null (unless already changed)
+            if ($knowledge->getNpc() === $this) {
+                $knowledge->setNpc(null);
             }
         }
 

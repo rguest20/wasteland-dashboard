@@ -49,6 +49,13 @@
       >
         New NPC
       </a>
+      <a
+        class="side-btn"
+        :class="{ active: currentNav === 'world_secret_new' }"
+        href="/worldsecrets/new"
+      >
+        New World Secret
+      </a>
         </nav>
     </div>
   </aside>
@@ -73,6 +80,7 @@ export default {
       if (path === '/roles/new') return 'role_new';
       if (path === '/locations/new') return 'location_new';
       if (path === '/npcs/new') return 'npc_new';
+      if (path === '/worldsecrets/new') return 'world_secret_new';
       return '';
     },
   },
