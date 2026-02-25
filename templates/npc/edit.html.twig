@@ -147,6 +147,8 @@
                 </div>
                 {{ form_errors(form.knowledge) }}
               </div>
+              {% do form.npcSkills.setRendered() %}
+              {% do form.knowledge.setRendered() %}
             </div>
 
             <div class="form-actions">

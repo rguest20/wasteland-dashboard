@@ -131,3 +131,20 @@ Run controller tests:
 docker compose exec npc-store-runtime php bin/phpunit tests/Controller
 ```
 
+## Images
+
+- Dashboard
+
+![Dashboard](docs/menu-example2.png)
+
+- Entity Screen
+
+![Entity](docs/entity-example.png)
+
+- New Entity Form
+
+![New-Entity](docs/new-entity-form.png)
+
+- Update Entity Form
+
+![Update-Entity](docs/entity-update.png)
