@@ -63,6 +63,10 @@ body {
   min-height: 100%;
 }
 
+.sidebar .side-block {
+  height: auto;
+}
+
 .side-title {
   color: var(--muted);
   font-size: 12px;
@@ -271,6 +275,8 @@ body {
 .nested-card .knowledge-description {
   font-size: 12px;
   font-family: "IBM Plex Mono", "SF Mono", Menlo, Consolas, monospace;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
 }
 
 .nested-card .knowledge-category {

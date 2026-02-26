@@ -9,6 +9,8 @@
 /vendor/
 
 .env
+supervisord.conf
+supervisord.log
 ###< symfony/framework-bundle ###
 
 ###> phpunit/phpunit ###

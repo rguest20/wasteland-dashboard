@@ -114,7 +114,7 @@
                   <div class="nested-cards wide" v-if="(entity.knowledge || []).length > 0">
                     <article class="nested-card" v-for="knowledge in entity.knowledge" :key="`npc-knowledge-${knowledge.id}`">
                       <p class="knowledge-name">{{ knowledge.title || 'Unknown Knowledge' }}</p>
-                      <pre class="knowledge-description">{{ knowledge.description || 'No description' }}</pre>
+                      <p class="knowledge-description">{{ knowledge.description || 'No description' }}</p>
                       <p class="knowledge-category">{{ knowledge.category || 'Uncategorized' }}</p>
                       <p v-if="knowledge.world_secret_id" class="knowledge-secret-tag">
                         <a class="related-link" :href="`/worldsecrets/${knowledge.world_secret_id}`">
